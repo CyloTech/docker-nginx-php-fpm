@@ -253,6 +253,12 @@ RUN echo "cgi.fix_pathinfo=0" > ${php_vars} &&\
 #    ln -s /etc/php7/php.ini /etc/php7/conf.d/php.ini && \
 #    find /etc/php7/conf.d/ -name "*.ini" -exec sed -i -re 's/^(\s*)#(.*)/\1;\2/g' {} \;
 
+RUN sed -i 's#worker_processes auto#worker_processes 2#g' /etc/nginx/nginx.conf
+RUN sed -i 's#worker_processes auto#worker_processes 2#g' /usr/local/etc/php-fpm.d/www.conf && \
+    sed -i 's#pm.max_children = 4#pm.max_children = 3#g' /usr/local/etc/php-fpm.d/www.conf && \
+    sed -i 's#pm.start_servers = 3#pm.start_servers = 1#g' /usr/local/etc/php-fpm.d/www.conf && \
+    sed -i 's#pm.min_spare_servers = 2#pm.min_spare_servers = 1#g' /usr/local/etc/php-fpm.d/www.conf && \
+    sed -i 's#pm.max_spare_servers = 4#pm.max_spare_servers = 2#g' /usr/local/etc/php-fpm.d/www.conf
 
 # Add Scripts
 ADD scripts/start.sh /start.sh
